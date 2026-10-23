@@ -6,6 +6,8 @@ Astro, fully static, deployed to GitHub Pages by `.github/workflows/deploy.yml`.
 ## Commands
 
 - Dev: `npm run dev`
+- Never hand back a branch you have not built. Run `npm run build` before
+  finishing; if it fails, fix it or report the failure.
 - Build (must pass before any PR): `npm run build`
 - Check: `npx astro check`
 - Dependencies are locked. Use `npm ci`, never change versions.
@@ -17,14 +19,21 @@ Astro, fully static, deployed to GitHub Pages by `.github/workflows/deploy.yml`.
 - `src/components/`, `src/layouts/`, `src/pages/` — site code.
 - Never commit `dist/`, `.astro/`, `node_modules/`.
 
+## Astro files
+
+- Line 1 of an `.astro` file containing imports or JS is exactly `---`. The
+  closing `---` sits before the markup. Never remove, reflow, or indent them.
+- No shell heredoc or redirect inside `.astro` files; frontmatter is TS, not shell.
+
 ## Style
 
 - Plain HTML/CSS. No frameworks, no Tailwind, no CSS-in-JS.
 - No client-side JS unless the feature is impossible without it. Every page must
   be readable with JavaScript disabled.
-- Dark only: bg `#0d1117`, text `#e6edf3`, muted `#7d8590`. No theme toggle.
+- Dark only: bg `#0d1117`, text `#e6edf3`, muted `#7d8590`, borders `#30363d`,
+  links `#58a6ff`. No light mode, no theme toggle.
 - No analytics, no trackers, no third-party fonts, no embeds. Images live in the repo.
-- Highlighting is configured in `astro.config.mjs`. Don't change Shiki settings.
+- Shiki theme is `github-dark` in `astro.config.mjs`. Don't change other Shiki settings.
 
 ## Truth rules (highest priority)
 
