@@ -1,0 +1,53 @@
+name: Draft a post from recent work
+
+# Deliberately NOT scheduled. Runs only when you trigger it.
+# To automate weekly, uncomment the schedule block below.
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: '0 14 * * 1'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+
+      - name: Install Copilot CLI
+        run: npm install -g @github/copilot
+
+      - name: Draft
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_PAT }}
+        run: |
+          copilot -p "Review the commits and closed issues from the last 7 days.
+          Pick the single most interesting technical finding. Create one draft post
+          in src/content/blog/ using only facts present in those commits and issues,
+          quoting real log lines where they exist. Link every claim to its commit or
+          issue in a Sources section. If nothing qualifies, create no post and say so.
+          Do not open a pull request if no post was written." \
+            --allow-tool='shell(git:*)' \
+            --allow-tool=write \
+            --no-ask-user
+
+      - name: Open PR
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.COPILOT_PAT }}
+        run: |
+          git checkout -b draft/$(date +%Y-%m-%d)
+          git add -A src/content/blog
+          git diff --cached --quiet && echo "no post drafted" && exit 0
+          git commit -m "draft: weekly post"
+          git push -u origin HEAD
+          gh pr create --fill --body "Drafted from this week's commits. Review before merging."
