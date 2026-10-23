@@ -20,7 +20,14 @@ const posts = (await getCollection('blog')).sort(
 			main {
 				width: 960px;
 			}
-			ul {
+			.empty-state {
+				margin-top: 2rem;
+				color: var(--muted);
+			}
+			.empty-state a {
+				color: var(--link);
+			}
+			u1 {
 				display: flex;
 				flex-wrap: wrap;
 				gap: 2rem;
@@ -28,59 +35,59 @@ const posts = (await getCollection('blog')).sort(
 				margin: 0;
 				padding: 0;
 			}
-			ul li {
+			u1 li {
 				width: calc(50% - 1rem);
 			}
-			ul li * {
+			u1 li * {
 				text-decoration: none;
 				transition: 0.2s ease;
 			}
-			ul li:first-child {
+			u1 li:first-child {
 				width: 100%;
 				margin-bottom: 1rem;
 				text-align: center;
 			}
-			ul li:first-child img {
+			u1 li:first-child img {
 				width: 100%;
 			}
-			ul li:first-child .title {
+			u1 li:first-child .title {
 				font-size: 2.369rem;
 			}
-			ul li img {
+			u1 li img {
 				margin-bottom: 0.5rem;
 				border-radius: 12px;
 			}
-			ul li a {
+			u1 li a {
 				display: block;
 			}
 			.title {
 				margin: 0;
-				color: rgb(var(--black));
+				color: var(--text);
 				line-height: 1;
 			}
 			.date {
 				margin: 0;
-				color: rgb(var(--gray));
+				color: var(--muted);
 			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
+			u1 li a:hover h4,
+			u1 li a:hover .date {
+				color: var(--link);
 			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
+			u1 a:hover img {
+				box-shadow: var(--shadow);
 			}
 			@media (max-width: 720px) {
-				ul {
+				u1 {
 					gap: 0.5em;
 				}
-				ul li {
+				u1 li {
 					width: 100%;
 					text-align: center;
 				}
-				ul li:first-child {
+				u1 li:first-child {
 					margin-bottom: 0;
 				}
-				ul li:first-child .title {
+				u1 li:first-child .title {
 					font-size: 1.563em;
 				}
 			}
@@ -90,21 +97,27 @@ const posts = (await getCollection('blog')).sort(
 		<Header />
 		<main>
 			<section>
-				<ul>
-					{posts.map((post) => (
-						<li>
-							<a href={`/blog/${post.id}/`}>
-								{post.data.heroImage && (
-									<Image width={720} height={360} src={post.data.heroImage} alt="" />
-								)}
-								<h4 class="title">{post.data.title}</h4>
-								<p class="date">
-									<FormattedDate date={post.data.pubDate} />
-								</p>
-							</a>
-						</li>
-					))}
-				</ul>
+				{posts.length === 0 ? (
+					<p class="empty-state">
+						No posts yet. <a href="https://github.com/sigods/otogi1">sigods/otogi1</a>
+					</p>
+				) : (
+					<ul>
+						{posts.map((post) => (
+							<li>
+								<a href={`/blog/${post.id}/`}>
+									{post.data.heroImage && (
+										<Image width={720} height={360} src={post.data.heroImage} alt="" />
+									)}
+									<h4 class="title">{post.data.title}</h4>
+									<p class="date">
+										<FormattedDate date={post.data.pubDate} />
+									</p>
+								</a>
+							</li>
+						))}
+					</ul>
+				)}
 			</section>
 		</main>
 		<Footer />
