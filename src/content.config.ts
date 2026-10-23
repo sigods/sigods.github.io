@@ -3,8 +3,7 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 const blog = defineCollection({
-	// Ignore the starter demo posts so the site builds cleanly with no blog entries.
-	loader: glob({ base: './src/content/blog', pattern: '**/*.disabled' }),
+	loader: glob({ base: './src/content/blog', pattern: '**/*.md' }),
 	// Type-check frontmatter using a schema
 	schema: ({ image }) =>
 		z.object({
